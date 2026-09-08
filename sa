@@ -1,0 +1,266 @@
+quality:
+  - name: 默认配置-权重映射
+    id: default-weight-mapping
+    source_extract_metadata: true
+    dest_extract_metadata: true
+    min_score_diff: 10
+
+    scoring:
+      # ===== 视频分辨率（videoFormat）权重 10 =====
+      resolution:
+        enabled: true
+        unknown_policy: ignore
+        weight: 10
+        priority:
+          - value: 4320p
+            score: 10.00
+          - value: 2160p
+            score: 9.50
+          - value: 1080p
+            score: 7.00
+          - value: 720p
+            score: 4.00
+          - value: 576p
+            score: 2.50
+          - value: 480p
+            score: 2.00
+          - value: 360p
+            score: 1.00
+
+      # ===== 片源/资源类型（resourceType）权重 2 =====
+      source:
+        enabled: true
+        unknown_policy: ignore
+        weight: 2
+        priority:
+          - value: Ultra HD
+            score: 10.00
+          - value: Blu-Ray
+            score: 9.50
+          - value: Remux
+            score: 9.00
+          - value: WEB-DL
+            score: 8.50
+
+      # ===== 视频编码（videoCodec）权重 7 =====
+      video_codec:
+        enabled: true
+        unknown_policy: ignore
+        weight: 7
+        priority:
+          - value: AV1
+            score: 10.00
+          - value: H.264
+            score: 9.50
+          - value: H.265
+            score: 9.00
+
+      # ===== 音轨（audioCodec）权重 4 =====
+      audio_codec:
+        enabled: true
+        unknown_policy: ignore
+        required: false
+        weight: 4
+        priority:
+          - codecs: [DTS:X]
+            score: 10.00
+          - codecs: [TrueHD]
+            atmos: true
+            score: 9.50
+            min_channels: 7
+          - codecs: [TrueHD]
+            atmos: true
+            score: 9.00
+            min_channels: 5
+          - codecs: [DTS-HD MA]
+            score: 8.50
+            min_channels: 7
+          - codecs: [DTS-HD MA]
+            score: 8.00
+            min_channels: 5
+          - codecs: [TrueHD]
+            score: 7.50
+            min_channels: 7
+          - codecs: [TrueHD]
+            score: 7.00
+            min_channels: 5
+          - codecs: [DTS-HD]
+            score: 6.50
+          - codecs: [Dolby Digital Plus]
+            atmos: true
+            score: 6.00
+            min_channels: 5
+          - codecs: [Dolby Digital Plus]
+            score: 5.50
+            min_channels: 5
+          - codecs: [DTS]
+            score: 5.00
+          - codecs: [PCM]
+            score: 4.50
+          - codecs: [Dolby Digital, DDP]
+            score: 4.00
+          - codecs: [AC3]
+            score: 3.50
+          - codecs: [AAC]
+            score: 3.00
+
+      # ===== 杜比视界（dolby_vision）权重 7 =====
+      dolby_vision:
+        enabled: true
+        unknown_policy: ignore
+        weight: 7
+        priority:
+          - value: Dolby Vision P7
+            score: 10.00
+          - value: Dolby Vision P5
+            score: 9.80
+          - value: Dolby Vision P8
+            score: 9.50
+          - value: Dolby Vision
+            score: 9.00
+
+      # ===== 动态范围/HDR（dynamic_range）权重 7 =====
+      hdr:
+        enabled: true
+        unknown_policy: ignore
+        weight: 7
+        priority:
+          - value: HDR10+
+            score: 8.50
+          - value: HDR10
+            score: 7.50
+          - value: HDR
+            score: 7.00
+          - value: HLG
+            score: 6.50
+          - value: SDR
+            score: 6.00
+
+      # ===== 色深（color_depth）权重 7 =====
+      color_depth:
+        enabled: true
+        unknown_policy: ignore
+        weight: 7
+        priority:
+          - value: 12-bit
+            score: 10.00
+          - value: 10-bit
+            score: 9.50
+          - value: 8-bit
+            score: 9.00
+
+      # ===== 帧率（frame_rate）权重 5.5 =====
+      frame_rate:
+        enabled: true
+        unknown_policy: ignore
+        weight: 5.5
+        priority:
+          - value: 120fps
+            score: 10.00
+          - value: 60fps
+            score: 9.50
+          - value: 30fps
+            score: 9.00
+          - value: 25fps
+            score: 8.50
+          - value: 24fps
+            score: 8.00
+
+      # ===== 字幕（subtitle）权重 3 =====
+      # 注意：这里保留了 JSON 里的字幕得分逻辑，且设置了 required: true
+      subtitle:
+        enabled: true
+        unknown_policy: ignore
+        required: true
+        weight: 3
+        priority:
+          # PGS 中文（含特效、双语）—— 满分 10
+          - languages: [zh, yue]
+            source: pgs
+            forced: false
+            commentary: false
+            score: 10.00
+          # ASS 中文（含特效、双语）—— 满分 10
+          - languages: [zh, yue]
+            source: ass
+            forced: false
+            commentary: false
+            score: 10.00
+          # SRT 中文（含双语）—— 8~10 分
+          - languages: [zh, yue]
+            source: srt
+            forced: false
+            commentary: false
+            score: 10.00
+          # 任何中文（兜底）
+          - languages: [zh, yue]
+            source: any
+            commentary: false
+            score: 9.00
+          # PGS 非中文 —— 负分（降低总分）
+          - languages: [en, ja, ko]
+            source: pgs
+            commentary: false
+            score: -1.00
+          # ASS 非中文 —— 负分
+          - languages: [en, ja, ko]
+            source: ass
+            commentary: false
+            score: -1.00
+          # SRT 非中文 —— 负分
+          - languages: [en, ja, ko]
+            source: srt
+            commentary: false
+            score: -1.00
+
+      # ===== 文件扩展名（file_extension）权重 2 =====
+      file_extension:
+        enabled: true
+        unknown_policy: ignore
+        weight: 2
+        priority:
+          - value: .mkv
+            score: 10.00
+          - value: .mp4
+            score: 9.00
+          - value: .ts
+            score: 8.00
+          - value: .m2ts
+            score: 7.00
+          - value: .iso
+            score: 6.00
+          - value: .avi
+            score: 5.00
+          - value: .rmvb
+            score: 4.00
+          - value: .wmv
+            score: 3.00
+          - value: .mpeg
+            score: 2.50
+          - value: .mov
+            score: 2.00
+
+      # ===== 文件大小（file_size）权重 0（关闭） =====
+      file_size:
+        enabled: false
+        weight: 0
+
+      # ===== 视频码率（无对应，保留但关闭） =====
+      video_bitrate:
+        enabled: false
+        weight: 0
+
+      # ===== 容器总码率（无对应，保留但关闭） =====
+      bitrate:
+        enabled: false
+        weight: 0
+
+    # ===== 排除规则 =====
+    exclude:
+      resolutions: [360p]
+      codecs: [Xvid, DivX]
+      hdr_types: []
+
+    # ===== 单版本模式 =====
+    version:
+      enabled: false
