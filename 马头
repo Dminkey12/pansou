@@ -1,0 +1,41 @@
+quality:
+  - name: 本地strm
+    id: quality-strm
+    min_score_diff: 8
+    scoring:
+      resolution:
+        enabled: true
+        unknown_policy: zero
+        weight: 20
+        priority: [2160p, 1080p, 1080i, 720p, 480p]
+      video_codec:
+        enabled: true
+        unknown_policy: zero
+        weight: 10
+        priority: [H.265, AV1, H.264, VP9]
+      hdr:
+        enabled: true
+        unknown_policy: zero
+        weight: 40
+        priority: [Dolby Vision P7, Dolby Vision P5, Dolby Vision P8, Dolby Vision, HDR10+, HDR10, HLG, HDR, SDR]
+      subtitle:
+        enabled: true
+        weight: 5
+        priority:
+          - score: 10.00
+            languages: [zh-CN, zh]
+            source: any
+          - score: 8.00
+            languages: [zh-TW, zh-HK, yue]
+            source: any
+          - score: 8.00
+            languages: [und]
+            source: any
+      bitrate:
+        enabled: true
+        unknown_policy: zero
+        weight: 25
+    exclude:
+      resolutions: [544p, 480p, 360p]
+      codecs: [Xvid, DivX]
+      hdr_types: []
