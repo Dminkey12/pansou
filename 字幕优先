@@ -124,13 +124,12 @@ quality:
         enabled: false
         weight: 0
 
-      # ===== 修改开始 =====
-      # 字幕：硬性条件（必须包含中文/粤语），且权重极高，绝对优先。
+      # ===== 字幕：硬性条件（必须包含中文/粤语），且权重相对较高 =====
       subtitle:
         enabled: true
         unknown_policy: ignore
-        required: true           # 改为 true，无匹配字幕则资源不合格
-        weight: 3              # 提高权重，确保中文字幕碾压其他维度
+        required: true           # 无匹配字幕则资源不合格
+        weight: 3                # 字幕权重设为最高（其他维度权重均≤3）
         priority:
           - languages: [zh, yue]
             source: any
@@ -139,12 +138,40 @@ quality:
           - languages: [zh, yue]
             source: any
             commentary: false
-          # 删掉了原来的 source: any 兜底项，非中文字幕不再给分，且不符合硬性条件
-      # ===== 修改结束 =====
+          # 删除了 source: any 兜底，非中文字幕不得分且不满足硬性条件
+      # ==============================================================
 
+      # ===== 文件格式：优先 MKV/MP4 等，ISO 得分最低 =====
       file_extension:
-        enabled: false
-        weight: 0
+        enabled: true
+        unknown_policy: ignore
+        weight: 10               # 该权重会被下面的 score 覆盖，保留无碍
+        priority:
+          - value: mkv
+            score: 10.00
+          - value: mp4
+            score: 9.00
+          - value: mov
+            score: 8.50
+          - value: ts
+            score: 8.00
+          - value: m2ts
+            score: 7.50
+          - value: avi
+            score: 7.00
+          - value: webm
+            score: 6.50
+          - value: flv
+            score: 6.00
+          - value: mpg
+            score: 5.50
+          - value: mpeg
+            score: 5.00
+          - value: vob
+            score: 4.50
+          - value: iso
+            score: 1.00          # ISO 放在最后，得分最低
+      # ==============================================================
 
       file_size:
         enabled: false
@@ -166,6 +193,7 @@ quality:
       resolutions: [360p]
       codecs: [Xvid, DivX]
       hdr_types: []
+      # 不再直接排除 ISO，让评分逻辑自然将其排在最后
 
     # 单版本模式。
     version:
