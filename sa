@@ -1,12 +1,10 @@
 quality:
   - name: 默认配置-权重映射
     id: default-weight-mapping
-    source_extract_metadata: true
-    dest_extract_metadata: true
     min_score_diff: 10
 
     scoring:
-      # ===== 分辨率（JSON videoFormat）权重 10 =====
+      # 1. 分辨率 (权重: 10)
       resolution:
         enabled: true
         unknown_policy: ignore
@@ -27,7 +25,7 @@ quality:
           - value: 360p
             score: 1.00
 
-      # ===== 片源/资源类型（JSON resourceType）权重 2 =====
+      # 2. 片源类型 (权重: 2)
       source:
         enabled: true
         unknown_policy: ignore
@@ -42,7 +40,7 @@ quality:
           - value: WEB-DL
             score: 8.50
 
-      # ===== 视频编码（JSON videoCodec）权重 7 =====
+      # 3. 视频编码 (权重: 7)
       video_codec:
         enabled: true
         unknown_policy: ignore
@@ -55,7 +53,7 @@ quality:
           - value: H.265
             score: 9.00
 
-      # ===== 音轨（JSON audioCodec）权重 4 =====
+      # 4. 音轨 (权重: 4) - 通过列表顺序决定优先级
       audio_codec:
         enabled: true
         unknown_policy: ignore
@@ -63,48 +61,33 @@ quality:
         weight: 4
         priority:
           - codecs: [DTS:X]
-            score: 10.00
           - codecs: [Dolby TrueHD]
             atmos: true
             min_channels: 7
-            score: 9.50
           - codecs: [Dolby TrueHD]
             atmos: true
             min_channels: 5
-            score: 9.00
           - codecs: [DTS-HD MA]
             min_channels: 7
-            score: 8.50
           - codecs: [DTS-HD MA]
             min_channels: 5
-            score: 8.00
           - codecs: [Dolby TrueHD]
             min_channels: 7
-            score: 7.50
           - codecs: [Dolby TrueHD]
             min_channels: 5
-            score: 7.00
           - codecs: [DTS-HD]
-            score: 6.50
           - codecs: [Dolby Digital Plus]
             atmos: true
             min_channels: 5
-            score: 6.00
           - codecs: [Dolby Digital Plus]
             min_channels: 5
-            score: 5.50
           - codecs: [DTS]
-            score: 5.00
           - codecs: [PCM]
-            score: 4.50
           - codecs: [Dolby Digital, DDP]
-            score: 4.00
           - codecs: [AC3]
-            score: 3.50
           - codecs: [AAC]
-            score: 3.00
 
-      # ===== 动态范围/HDR（JSON dolby_vision + dynamic_range 合并）权重 7 =====
+      # 5. 动态范围/HDR (权重: 7)
       hdr:
         enabled: true
         unknown_policy: ignore
@@ -129,7 +112,7 @@ quality:
           - value: SDR
             score: 6.00
 
-      # ===== 色深（JSON color_depth）权重 7 =====
+      # 6. 色深 (权重: 7)
       color_depth:
         enabled: true
         unknown_policy: ignore
@@ -142,7 +125,7 @@ quality:
           - value: 8-bit
             score: 9.00
 
-      # ===== 帧率（JSON frame_rate）权重 5.5 =====
+      # 7. 帧率 (权重: 5.5)
       frame_rate:
         enabled: true
         unknown_policy: ignore
@@ -159,9 +142,7 @@ quality:
           - value: 24fps
             score: 8.00
 
-      # ===== 字幕（JSON subtitle）权重 3 =====
-      # 硬性条件：必须含中文/粤语字幕，且只认内封字幕（embedded）
-      # 不同字幕格式给不同得分，非中文字幕不加分（干脆不给项）
+      # 8. 字幕 (权重: 3) - 必需，且只偏好中文
       subtitle:
         enabled: true
         unknown_policy: ignore
@@ -170,11 +151,8 @@ quality:
         priority:
           - languages: [zh, zh-CN, zh-TW, zh-HK, yue]
             source: embedded
-            commentary: false
-            hearing_impaired: false
-            score: 10.00
 
-      # ===== 文件扩展名（JSON file_extension）权重 2 =====
+      # 9. 文件扩展名 (权重: 2)
       file_extension:
         enabled: true
         unknown_policy: ignore
@@ -201,26 +179,27 @@ quality:
           - value: .mov
             score: 2.00
 
-      # ===== 文件大小（JSON file_size 权重 0）关闭 =====
+      # 10. 文件大小 (权重: 0, 即关闭)
       file_size:
         enabled: false
         weight: 0
 
-      # ===== 视频码率（关闭）=====
+      # 11. 视频码率 (关闭)
       video_bitrate:
         enabled: false
         weight: 0
 
-      # ===== 容器总码率（关闭）=====
+      # 12. 容器总码率 (关闭)
       bitrate:
         enabled: false
         weight: 0
 
-    # ===== 排除规则 =====
+    # 排除规则
     exclude:
       resolutions: [360p]
       codecs: [Xvid, DivX]
       hdr_types: []
 
+    # 单版本模式 (关闭)
     version:
       enabled: false
