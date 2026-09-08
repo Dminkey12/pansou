@@ -22,14 +22,14 @@ quality:
       resolution:
         enabled: true
         unknown_policy: ignore
-        weight: 60
+        weight: 3
         priority: [4320p, 2160p, 1080p, 1080i, 720p, 576p, 480p]
 
       # 片源从文件名识别；Remux 可匹配带片源后缀的组合值。
       source:
         enabled: true
         unknown_policy: ignore
-        weight: 3
+        weight: 1
         priority:
           - Remux
           - UHD BluRay
@@ -54,7 +54,7 @@ quality:
         enabled: true
         unknown_policy: ignore
         required: false
-        weight: 6
+        weight: 0.6
         priority:
           - codecs: [Dolby TrueHD]
             atmos: true
@@ -102,7 +102,7 @@ quality:
       hdr:
         enabled: true
         unknown_policy: ignore
-        weight: 40
+        weight: 2
         priority:
           - Dolby Vision P7
           - Dolby Vision P5
@@ -130,7 +130,7 @@ quality:
         enabled: true
         unknown_policy: ignore
         required: true           # 改为 true，无匹配字幕则资源不合格
-        weight: 30              # 提高权重，确保中文字幕碾压其他维度
+        weight: 3              # 提高权重，确保中文字幕碾压其他维度
         priority:
           - languages: [zh, yue]
             source: any
@@ -159,7 +159,7 @@ quality:
       video_bitrate:
         enabled: true
         unknown_policy: ignore
-        weight: 30
+        weight: 0.5
 
     # 命中任意排除项即跳过资源。
     exclude:
