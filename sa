@@ -6,7 +6,7 @@ quality:
     min_score_diff: 10
 
     scoring:
-      # ===== 视频分辨率（videoFormat）权重 10 =====
+      # ===== 分辨率（JSON videoFormat）权重 10 =====
       resolution:
         enabled: true
         unknown_policy: ignore
@@ -27,7 +27,7 @@ quality:
           - value: 360p
             score: 1.00
 
-      # ===== 片源/资源类型（resourceType）权重 2 =====
+      # ===== 片源/资源类型（JSON resourceType）权重 2 =====
       source:
         enabled: true
         unknown_policy: ignore
@@ -42,7 +42,7 @@ quality:
           - value: WEB-DL
             score: 8.50
 
-      # ===== 视频编码（videoCodec）权重 7 =====
+      # ===== 视频编码（JSON videoCodec）权重 7 =====
       video_codec:
         enabled: true
         unknown_policy: ignore
@@ -55,7 +55,7 @@ quality:
           - value: H.265
             score: 9.00
 
-      # ===== 音轨（audioCodec）权重 4 =====
+      # ===== 音轨（JSON audioCodec）权重 4 =====
       audio_codec:
         enabled: true
         unknown_policy: ignore
@@ -64,35 +64,35 @@ quality:
         priority:
           - codecs: [DTS:X]
             score: 10.00
-          - codecs: [TrueHD]
+          - codecs: [Dolby TrueHD]
             atmos: true
+            min_channels: 7
             score: 9.50
-            min_channels: 7
-          - codecs: [TrueHD]
+          - codecs: [Dolby TrueHD]
             atmos: true
+            min_channels: 5
             score: 9.00
-            min_channels: 5
           - codecs: [DTS-HD MA]
+            min_channels: 7
             score: 8.50
-            min_channels: 7
           - codecs: [DTS-HD MA]
+            min_channels: 5
             score: 8.00
-            min_channels: 5
-          - codecs: [TrueHD]
-            score: 7.50
+          - codecs: [Dolby TrueHD]
             min_channels: 7
-          - codecs: [TrueHD]
-            score: 7.00
+            score: 7.50
+          - codecs: [Dolby TrueHD]
             min_channels: 5
+            score: 7.00
           - codecs: [DTS-HD]
             score: 6.50
           - codecs: [Dolby Digital Plus]
             atmos: true
+            min_channels: 5
             score: 6.00
-            min_channels: 5
           - codecs: [Dolby Digital Plus]
-            score: 5.50
             min_channels: 5
+            score: 5.50
           - codecs: [DTS]
             score: 5.00
           - codecs: [PCM]
@@ -104,8 +104,8 @@ quality:
           - codecs: [AAC]
             score: 3.00
 
-      # ===== 杜比视界（dolby_vision）权重 7 =====
-      dolby_vision:
+      # ===== 动态范围/HDR（JSON dolby_vision + dynamic_range 合并）权重 7 =====
+      hdr:
         enabled: true
         unknown_policy: ignore
         weight: 7
@@ -118,13 +118,6 @@ quality:
             score: 9.50
           - value: Dolby Vision
             score: 9.00
-
-      # ===== 动态范围/HDR（dynamic_range）权重 7 =====
-      hdr:
-        enabled: true
-        unknown_policy: ignore
-        weight: 7
-        priority:
           - value: HDR10+
             score: 8.50
           - value: HDR10
@@ -136,7 +129,7 @@ quality:
           - value: SDR
             score: 6.00
 
-      # ===== 色深（color_depth）权重 7 =====
+      # ===== 色深（JSON color_depth）权重 7 =====
       color_depth:
         enabled: true
         unknown_policy: ignore
@@ -149,7 +142,7 @@ quality:
           - value: 8-bit
             score: 9.00
 
-      # ===== 帧率（frame_rate）权重 5.5 =====
+      # ===== 帧率（JSON frame_rate）权重 5.5 =====
       frame_rate:
         enabled: true
         unknown_policy: ignore
@@ -166,54 +159,22 @@ quality:
           - value: 24fps
             score: 8.00
 
-      # ===== 字幕（subtitle）权重 3 =====
-      # 注意：这里保留了 JSON 里的字幕得分逻辑，且设置了 required: true
+      # ===== 字幕（JSON subtitle）权重 3 =====
+      # 硬性条件：必须含中文/粤语字幕，且只认内封字幕（embedded）
+      # 不同字幕格式给不同得分，非中文字幕不加分（干脆不给项）
       subtitle:
         enabled: true
         unknown_policy: ignore
         required: true
         weight: 3
         priority:
-          # PGS 中文（含特效、双语）—— 满分 10
-          - languages: [zh, yue]
-            source: pgs
-            forced: false
+          - languages: [zh, zh-CN, zh-TW, zh-HK, yue]
+            source: embedded
             commentary: false
+            hearing_impaired: false
             score: 10.00
-          # ASS 中文（含特效、双语）—— 满分 10
-          - languages: [zh, yue]
-            source: ass
-            forced: false
-            commentary: false
-            score: 10.00
-          # SRT 中文（含双语）—— 8~10 分
-          - languages: [zh, yue]
-            source: srt
-            forced: false
-            commentary: false
-            score: 10.00
-          # 任何中文（兜底）
-          - languages: [zh, yue]
-            source: any
-            commentary: false
-            score: 9.00
-          # PGS 非中文 —— 负分（降低总分）
-          - languages: [en, ja, ko]
-            source: pgs
-            commentary: false
-            score: -1.00
-          # ASS 非中文 —— 负分
-          - languages: [en, ja, ko]
-            source: ass
-            commentary: false
-            score: -1.00
-          # SRT 非中文 —— 负分
-          - languages: [en, ja, ko]
-            source: srt
-            commentary: false
-            score: -1.00
 
-      # ===== 文件扩展名（file_extension）权重 2 =====
+      # ===== 文件扩展名（JSON file_extension）权重 2 =====
       file_extension:
         enabled: true
         unknown_policy: ignore
@@ -240,17 +201,17 @@ quality:
           - value: .mov
             score: 2.00
 
-      # ===== 文件大小（file_size）权重 0（关闭） =====
+      # ===== 文件大小（JSON file_size 权重 0）关闭 =====
       file_size:
         enabled: false
         weight: 0
 
-      # ===== 视频码率（无对应，保留但关闭） =====
+      # ===== 视频码率（关闭）=====
       video_bitrate:
         enabled: false
         weight: 0
 
-      # ===== 容器总码率（无对应，保留但关闭） =====
+      # ===== 容器总码率（关闭）=====
       bitrate:
         enabled: false
         weight: 0
@@ -261,6 +222,5 @@ quality:
       codecs: [Xvid, DivX]
       hdr_types: []
 
-    # ===== 单版本模式 =====
     version:
       enabled: false
