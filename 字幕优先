@@ -64,11 +64,11 @@ quality:
             commentary: false
             visual_impaired: false
           - codecs: [DTS-HD MA, Dolby TrueHD, PCM, FLAC]
-            min_channels: 6
+            min_channels: 0.6
             commentary: false
             visual_impaired: false
           - codecs: [DTS-HD MA, Dolby TrueHD, PCM, FLAC]
-            min_channels: 1
+            min_channels: 0.1
             commentary: false
             visual_impaired: false
           - codecs: [Dolby Digital Plus]
@@ -76,25 +76,25 @@ quality:
             commentary: false
             visual_impaired: false
           - codecs: [DTS-HD, Dolby Digital Plus, DTS]
-            min_channels: 6
+            min_channels: 0.6
             commentary: false
             visual_impaired: false
           - codecs: [DTS-HD, Dolby Digital Plus, DTS]
-            min_channels: 1
+            min_channels: 0.1
             commentary: false
             visual_impaired: false
           - codecs: [Dolby Digital, Opus, AAC]
-            min_channels: 6
+            min_channels: 0.6
             commentary: false
             visual_impaired: false
           - codecs: [Dolby Digital, Opus, AAC]
-            min_channels: 1
+            min_channels: 0.1
             commentary: false
             visual_impaired: false
           - codecs: [MP3]
             commentary: false
             visual_impaired: false
-          - min_channels: 1
+          - min_channels: 0.1
             commentary: false
             visual_impaired: false
 
@@ -141,36 +141,36 @@ quality:
           # 删除了 source: any 兜底，非中文字幕不得分且不满足硬性条件
       # ==============================================================
 
-      # ===== 文件格式：优先 MKV/MP4 等，ISO 得分最低 =====
+      # ===== 文件格式：优先 MKV/MP4 等，ISO 得分最低（分数已等比缩小） =====
       file_extension:
         enabled: true
         unknown_policy: ignore
         weight: 10               # 该权重会被下面的 score 覆盖，保留无碍
         priority:
           - value: mkv
-            score: 10.00
+            score: 1.00
           - value: mp4
-            score: 9.00
+            score: 0.90
           - value: mov
-            score: 8.50
+            score: 0.85
           - value: ts
-            score: 8.00
+            score: 0.80
           - value: m2ts
-            score: 7.50
+            score: 0.75
           - value: avi
-            score: 7.00
+            score: 0.70
           - value: webm
-            score: 6.50
+            score: 0.65
           - value: flv
-            score: 6.00
+            score: 0.60
           - value: mpg
-            score: 5.50
+            score: 0.55
           - value: mpeg
-            score: 5.00
+            score: 0.50
           - value: vob
-            score: 4.50
+            score: 0.45
           - value: iso
-            score: 1.00          # ISO 放在最后，得分最低
+            score: 0.10          # ISO 放在最后，得分最低
       # ==============================================================
 
       file_size:
