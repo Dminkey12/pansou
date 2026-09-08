@@ -130,7 +130,7 @@ quality:
         enabled: true
         unknown_policy: ignore
         required: true           # 改为 true，无匹配字幕则资源不合格
-        weight: 50              # 提高权重，确保中文字幕碾压其他维度
+        weight: 80              # 提高权重，确保中文字幕碾压其他维度
         priority:
           - languages: [zh, yue]
             source: any
