@@ -22,7 +22,7 @@ quality:
       resolution:
         enabled: true
         unknown_policy: ignore
-        weight: 20
+        weight: 60
         priority: [4320p, 2160p, 1080p, 1080i, 720p, 576p, 480p]
 
       # 片源从文件名识别；Remux 可匹配带片源后缀的组合值。
