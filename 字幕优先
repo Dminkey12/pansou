@@ -64,11 +64,11 @@ quality:
             commentary: false
             visual_impaired: false
           - codecs: [DTS-HD MA, Dolby TrueHD, PCM, FLAC]
-            min_channels: 0.6
+            min_channels: 6
             commentary: false
             visual_impaired: false
           - codecs: [DTS-HD MA, Dolby TrueHD, PCM, FLAC]
-            min_channels: 0.1
+            min_channels: 1
             commentary: false
             visual_impaired: false
           - codecs: [Dolby Digital Plus]
@@ -76,25 +76,25 @@ quality:
             commentary: false
             visual_impaired: false
           - codecs: [DTS-HD, Dolby Digital Plus, DTS]
-            min_channels: 0.6
+            min_channels: 6
             commentary: false
             visual_impaired: false
           - codecs: [DTS-HD, Dolby Digital Plus, DTS]
-            min_channels: 0.1
+            min_channels: 1
             commentary: false
             visual_impaired: false
           - codecs: [Dolby Digital, Opus, AAC]
-            min_channels: 0.6
+            min_channels: 6
             commentary: false
             visual_impaired: false
           - codecs: [Dolby Digital, Opus, AAC]
-            min_channels: 0.1
+            min_channels: 1
             commentary: false
             visual_impaired: false
           - codecs: [MP3]
             commentary: false
             visual_impaired: false
-          - min_channels: 0.1
+          - min_channels: 1
             commentary: false
             visual_impaired: false
 
@@ -141,11 +141,11 @@ quality:
           # 删除了 source: any 兜底，非中文字幕不得分且不满足硬性条件
       # ==============================================================
 
-      # ===== 文件格式：优先 MKV/MP4 等，ISO 得分最低（分数已等比缩小） =====
+      # ===== 文件格式：优先 MKV/MP4 等，ISO 得分最低 =====
       file_extension:
         enabled: true
         unknown_policy: ignore
-        weight: 1               # 该权重会被下面的 score 覆盖，保留无碍
+        # 不再写 weight，直接用 priority 里的 score 打分
         priority:
           - value: mkv
             score: 1.00
