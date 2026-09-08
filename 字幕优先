@@ -145,7 +145,7 @@ quality:
       file_extension:
         enabled: true
         unknown_policy: ignore
-        weight: 10               # 该权重会被下面的 score 覆盖，保留无碍
+        weight: 1               # 该权重会被下面的 score 覆盖，保留无碍
         priority:
           - value: mkv
             score: 1.00
