@@ -11,8 +11,8 @@
 # 文档：https://murongyun8.github.io/MediaTidy-Wiki/features/rules.html
 
 quality:
-  - name: 冰梦-单版本收藏-画质优先-杜比加权
-    id: quality-single-best-dv-v1
+  - name: 字幕优先
+    id: zimu-v1
     source_extract_metadata: true
     dest_extract_metadata: true
     # 普通洗版所需的最低分差；同分仍按音轨、字幕规则判断。
