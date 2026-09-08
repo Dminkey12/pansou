@@ -1,0 +1,172 @@
+# ==============================================================================
+# 单版本收藏评分
+# ==============================================================================
+# 适用：电影、剧集的单版本整理与洗版。
+# 偏好：杜比视界、视频码率、分辨率，兼顾片源、音轨、字幕和色深。
+# 各维度按权重求和，权重不是百分比，也不代表严格逐项比较。
+# 评分依赖文件名和探测元数据，无法直接判断母版质量或播放兼容性。
+#
+# 使用：开启源、目标元数据提取及洗版升级，在整理方案中选择本规则。
+# 已有 quality 顶层键时合并或替换同名列表项，避免重复顶层键。
+# 文档：https://murongyun8.github.io/MediaTidy-Wiki/features/rules.html
+
+quality:
+  - name: 冰梦-单版本收藏-画质优先-杜比加权
+    id: quality-single-best-dv-v1
+    source_extract_metadata: true
+    dest_extract_metadata: true
+    # 普通洗版所需的最低分差；同分仍按音轨、字幕规则判断。
+    min_score_diff: 10
+
+    scoring:
+      resolution:
+        enabled: true
+        unknown_policy: ignore
+        weight: 20
+        priority: [4320p, 2160p, 1080p, 1080i, 720p, 576p, 480p]
+
+      # 片源从文件名识别；Remux 可匹配带片源后缀的组合值。
+      source:
+        enabled: true
+        unknown_policy: ignore
+        weight: 3
+        priority:
+          - Remux
+          - UHD BluRay
+          - BluRay
+          - WEB-DL
+          - BDRip
+          - WEBRip
+          - WEB
+          - HDTV
+          - DVDRip
+          - DVD
+
+      # 编码格式不参与评分。
+      video_codec:
+        enabled: false
+        weight: 0
+        priority: [AV1, H.265, H.264, VP9, VC-1]
+
+      # 同一条音轨须满足条目内全部条件，取最高匹配档位计分。
+      # 优先高规格正片音轨；已标记的评论轨和口述影像轨不加分。
+      audio_codec:
+        enabled: true
+        unknown_policy: ignore
+        required: false
+        weight: 6
+        priority:
+          - codecs: [Dolby TrueHD]
+            atmos: true
+            commentary: false
+            visual_impaired: false
+          - codecs: [DTS:X]
+            commentary: false
+            visual_impaired: false
+          - codecs: [DTS-HD MA, Dolby TrueHD, PCM, FLAC]
+            min_channels: 6
+            commentary: false
+            visual_impaired: false
+          - codecs: [DTS-HD MA, Dolby TrueHD, PCM, FLAC]
+            min_channels: 1
+            commentary: false
+            visual_impaired: false
+          - codecs: [Dolby Digital Plus]
+            atmos: true
+            commentary: false
+            visual_impaired: false
+          - codecs: [DTS-HD, Dolby Digital Plus, DTS]
+            min_channels: 6
+            commentary: false
+            visual_impaired: false
+          - codecs: [DTS-HD, Dolby Digital Plus, DTS]
+            min_channels: 1
+            commentary: false
+            visual_impaired: false
+          - codecs: [Dolby Digital, Opus, AAC]
+            min_channels: 6
+            commentary: false
+            visual_impaired: false
+          - codecs: [Dolby Digital, Opus, AAC]
+            min_channels: 1
+            commentary: false
+            visual_impaired: false
+          - codecs: [MP3]
+            commentary: false
+            visual_impaired: false
+          - min_channels: 1
+            commentary: false
+            visual_impaired: false
+
+      # 按收藏偏好排列动态范围；识别到多个值时取最高匹配项。
+      hdr:
+        enabled: true
+        unknown_policy: ignore
+        weight: 40
+        priority:
+          - Dolby Vision P7
+          - Dolby Vision P5
+          - Dolby Vision P8
+          - Dolby Vision
+          - HDR10+
+          - HDR10
+          - HLG
+          - HDR
+          - SDR
+
+      color_depth:
+        enabled: true
+        unknown_policy: ignore
+        weight: 0.5
+        priority: [12-bit, 10-bit, 8-bit]
+
+      frame_rate:
+        enabled: false
+        weight: 0
+
+      # ===== 修改开始 =====
+      # 字幕：硬性条件（必须包含中文/粤语），且权重极高，绝对优先。
+      subtitle:
+        enabled: true
+        unknown_policy: ignore
+        required: true           # 改为 true，无匹配字幕则资源不合格
+        weight: 100              # 提高权重，确保中文字幕碾压其他维度
+        priority:
+          - languages: [zh, yue]
+            source: any
+            forced: false
+            commentary: false
+          - languages: [zh, yue]
+            source: any
+            commentary: false
+          # 删掉了原来的 source: any 兜底项，非中文字幕不再给分，且不符合硬性条件
+      # ===== 修改结束 =====
+
+      file_extension:
+        enabled: false
+        weight: 0
+
+      file_size:
+        enabled: false
+        weight: 0
+
+      # 容器总码率：关闭。
+      bitrate:
+        enabled: false
+        weight: 0
+
+      # 主视频流码率；任一方取值未知时，双方均跳过此项。
+      video_bitrate:
+        enabled: true
+        unknown_policy: ignore
+        weight: 30
+
+    # 命中任意排除项即跳过资源。
+    exclude:
+      resolutions: [360p]
+      codecs: [Xvid, DivX]
+      hdr_types: []
+
+    # 单版本模式。
+    version:
+      enabled: false
